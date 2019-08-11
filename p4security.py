@@ -37,27 +37,19 @@ def s3Upload(filename):
     session = boto.connect_s3(aws_access_key_id, aws_secret_key, host='s3.us-east-1.amazonaws.com')
     bname = 'meow-rekognition'
 
-    #### Get bucket and display details
     b = session.get_bucket(bname)
 
-    ### Create new key, define metadata, upload and ACL
     k = b.new_key(filename)
     k.set_metadata('PiedPiperProject', 'MEOW')
     k.set_contents_from_filename(filename)
 
 
 def getDynamoDbInfo(filename):
-    # filename = str(filename[0])
-    # dynamodb_resource = resource('dynamodb')
     table = read_table_item("meow-rekognition", "photo", filename)
-    # table = read_table_item("meow-rekognition", "photo", "2019-07-30_17-54-18.jpeg")
     return table
 
 
 def read_table_item(table_name, pk_name, pk_value):
-    """
-    Return item read by primary key.
-    """
     table = dynamodb_resource.Table(table_name)
     response = table.get_item(Key={pk_name: pk_value})
 
